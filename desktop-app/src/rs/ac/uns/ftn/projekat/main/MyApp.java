@@ -30,8 +30,8 @@ public class MyApp{
 					t.add(d);
 					data = t;
 				}else firstLine=true;
+				System.out.println(d);
 			}
-//			System.out.println(data);
 			bf.close();
 			isr.close();
 		} catch (Exception e) {
@@ -216,7 +216,7 @@ public class MyApp{
 		double d1 = 0,d2 = 0;
 		
 		//P(A|BC)= P(BC|A)*P(A)/P(BC)
-		d1 =classEP("E", valuse) / denominator(valuse);
+		d1 =classEP("e", valuse) / denominator(valuse);
 		d2 = classEP("p", valuse) / denominator(valuse);
 		if(d1 > d2) {
 			str = "e";
@@ -232,29 +232,28 @@ public class MyApp{
 	public static void main(String[] args){
 		ArrayList<String> proba=new ArrayList<String>();
 		proba.add("");
-		proba.add("b");
-		proba.add("s");
+		proba.add("k");
+		proba.add("y");
 		proba.add("n");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("");
-		proba.add("o");
-		proba.add("p");
+		proba.add("f");
+		proba.add("f");
+		proba.add("f");
+		proba.add("c");
+		proba.add("n");
+		proba.add("b");
+		proba.add("t");
+		proba.add("?");
 		proba.add("k");
 		proba.add("s");
-		proba.add("u");
+		proba.add("p");
+		proba.add("w");
+		proba.add("p");
+		proba.add("w");
+		proba.add("o");
+		proba.add("e");
+		proba.add("w");
+		proba.add("v");
+		proba.add("d");
 		
 		MyApp ba = new MyApp();
 		ba.readTable(filePath);
