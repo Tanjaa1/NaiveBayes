@@ -1,19 +1,19 @@
-package rs.ac.uns.ftn.projekat.main;
+package rs.ac.uns.ftn.projekat.backend;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import rs.ac.uns.ftn.projekat.front.MainFrame;
-import unbbayes.io.exception.LoadException;
-
-public class MyApp{ 
-	static String filePath = "train.csv";
+public class Bayes {
+	static String filePath = "titanic_train.csv";
 	static ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+	
+	public Bayes() {
+		readTable(filePath);
+	}
 	
 	public ArrayList<ArrayList<String>> readTable(String filePath){
 		ArrayList<String> d = null;
@@ -32,9 +32,9 @@ public class MyApp{
 						d.add(str1[i]);
 						t.add(d);
 					data = t;
-				
-					if(d.size()<9)
-						d.add("");
+//				
+//					if(d.size()<9)
+//						d.add("");
 				}else firstLine=true;
 			}
 			bf.close();
@@ -48,11 +48,13 @@ public class MyApp{
 	
 	public double denominator(ArrayList<String> values) {
 		double result = 1.0;
-		ArrayList<Integer> count=new ArrayList<Integer>(Collections.nCopies(9, 0));
+		ArrayList<Integer> count=new ArrayList<Integer>(Collections.nCopies(7, 0));
 		for(int i = 0; i < data.size() ;i++) {
 			for(int k = 1; k < count.size() ;k++) {
-				if(data.get(i).get(k).equals(values.get(k)))
-					count.set(k, count.get(k)+1);
+				if(values.get(k)!="") {		
+					if(data.get(i).get(k).equals(values.get(k)))
+						count.set(k, count.get(k)+1);
+				}
 			}
 		}		
 		//P(BC)=P(B)*P(C)
@@ -67,14 +69,16 @@ public class MyApp{
 	public double classEP(String classEP,ArrayList<String> values) {
 		double result = 1.0;
 		int countIsClass = 0;
-		ArrayList<Integer> count=new ArrayList<Integer>(Collections.nCopies(9, 0));
+		ArrayList<Integer> count=new ArrayList<Integer>(Collections.nCopies(7, 0));
 		
 		for(int i = 0; i < data.size() ;i++) {
 			if(data.get(i).get(0).equals(classEP))
 				countIsClass++;
 			for(int k = 1; k < count.size() ;k++) {
-				if(data.get(i).get(k).equals(values.get(k)) && data.get(i).get(0).equals(classEP))
-					count.set(k, count.get(k)+1);
+				if(values.get(k)!="") {
+					if(data.get(i).get(k).equals(values.get(k)) && data.get(i).get(0).equals(classEP))
+						count.set(k, count.get(k)+1);
+				}
 			}
 		}
 		//P(BC|A)*P(A)=P(A)*P(B|A)*P(C|A)=P(A)*P(BA)/P(A)*P(CA)/P(A)
@@ -87,37 +91,16 @@ public class MyApp{
 		return result;
 	}
 	
-
-	public static void main(String[] args)throws LoadException, IOException {
+	public String Calculate(ArrayList<String> values){
+		Double yes=0.0,no=0.0;
 		
-		MainFrame mf=MainFrame.getInstance();
-		mf.setVisible(true);
+		//P(A|BC)= P(BC|A)*P(A)/P(BC)
+		no=classEP("0", values) / denominator(values);
+		yes=classEP("1", values) / denominator(values);
 		
-		
-//		ArrayList<String> proba=new ArrayList<String>();
-//		proba.add("0"); //survived
-//		proba.add("0"); //class
-//		proba.add("male"); // gender
-//		proba.add(""); //age
-//		proba.add("0"); //sibsp
-//		proba.add("0");//parch
-//		proba.add("");//fare
-//		proba.add("");//cabin//noooooo
-//		proba.add("S");//embarked
-//		
-//		MyApp ba = new MyApp();
-//		ba.readTable(filePath);
-//		
-//		double d1 = 0,d2 = 0,d3=0,d4=0,d5=0;
-//		
-//		//P(A|BC)= P(BC|A)*P(A)/P(BC)
-//		d1 =ba.classEP("0", proba) / ba.denominator(proba);
-//		d2 = ba.classEP("1", proba) / ba.denominator(proba);
-//		
-//		System.out.println("Probability of 1:"+d1);
-//		System.out.println("Probability of 2::"+d2);
-		
-	
+		if(yes>no)
+			return "You would survive!";
+		else
+			return "You would not survive!";
 	}
-
 }
