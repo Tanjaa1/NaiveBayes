@@ -90,34 +90,8 @@ public class MyApp{
 	
 
 	public static void main(String[] args)throws Exception {
-		Test t=new Test();
 		MainFrame mf=MainFrame.getInstance();
-		mf.setVisible(true);
-		
-		
-//		ArrayList<String> proba=new ArrayList<String>();
-//		proba.add("0"); //survived
-//		proba.add("0"); //class
-//		proba.add("male"); // gender
-//		proba.add(""); //age
-//		proba.add("0"); //sibsp
-//		proba.add("0");//parch
-//		proba.add("");//fare
-//		proba.add("");//cabin//noooooo
-//		proba.add("S");//embarked
-//		
-//		MyApp ba = new MyApp();
-//		ba.readTable(filePath);
-//		
-//		double d1 = 0,d2 = 0,d3=0,d4=0,d5=0;
-//		
-//		//P(A|BC)= P(BC|A)*P(A)/P(BC)
-//		d1 =ba.classEP("0", proba) / ba.denominator(proba);
-//		d2 = ba.classEP("1", proba) / ba.denominator(proba);
-//		
-//		System.out.println("Probability of 1:"+d1);
-//		System.out.println("Probability of 2::"+d2);
-		
+		mf.setVisible(true);	
 	
 	}
 

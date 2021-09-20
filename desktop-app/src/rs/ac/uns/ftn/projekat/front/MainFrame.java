@@ -64,40 +64,33 @@ public class MainFrame extends JFrame {
 	static TextField sibpText=new TextField();
 	static TextField parchText=new TextField();
 	static TextField fareText=new TextField();
+	private Bayes bayes;
 	
-	static ProbabilisticNetwork net;
-	static IInferenceAlgorithm algorithm = new JunctionTreeAlgorithm();
-	static List<Node> nodeList;
-	
-	public static MainFrame getInstance() throws LoadException, IOException {
+	public static MainFrame getInstance() throws Exception {
 		if (instance == null) {
 			instance = new MainFrame();
 		}
 		return instance;
 	}
 	
-	private MainFrame() throws LoadException, IOException
+	private MainFrame() throws Exception
 	{
-		BaseIO io = new NetIO();
-		net= (ProbabilisticNetwork)io.load(new File("unb.net"));
-	 	algorithm.setNetwork(net);
-		algorithm.run();			
-		nodeList = net.getNodes();
 		
-		Test t=new Test();
-		statistic.setText("Percentage of accuracy (Bayesian theorem / Bayesian network) on test set: ");
+		bayes=new Bayes();
+		statistic.setForeground(Color.GRAY);
+		statistic.setText("Percentage of accuracy (Bayesian theorem / Bayesian network) on test set: "+bayes.BayesianTheoremStatistic()+"% / "+bayes.BayesianNetworkStatistic()+"%");
 		
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
 		int screenHeight = screenSize.height;
 		int screenWidth = screenSize.width;
-		setSize(screenWidth *1/3, screenHeight *4/5);
+		setSize(screenWidth *1/3, screenHeight *3/5);
 		setTitle("Titanic");
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setIconImage((new ImageIcon("resources/attack.png")).getImage());
 		setResizable(false);
-		//statusBar
+		
 		this.setLayout(new BorderLayout());
 		JPanel statusPanel = new JPanel();
 
@@ -184,14 +177,10 @@ public class MainFrame extends JFrame {
 		panelResult.setAlignmentX(CENTER_ALIGNMENT);
 		panelB.setBackground(Color.getHSBColor(100, 100, 100));
 		panelResult.add(resultJava);
+		panelResult.add(resultUnb);
 		box.add(panelResult);
 		
-		JPanel panelResultUnb= new JPanel();
-		panelResultUnb.setAlignmentX(CENTER_ALIGNMENT);
-		panelResultUnb.setBackground(Color.getHSBColor(100, 100, 100));
-		panelResultUnb.add(resultUnb);
-		box.add(panelResultUnb);
-
+		
 		SimpleDateFormat date_format=new SimpleDateFormat("HH:mm:ss  dd.MM.yyyy.");
 		final JLabel timedate=new JLabel(date_format.format(new GregorianCalendar().getTime()));
 		Timer timer=new Timer(500,new ActionListener() {
@@ -212,8 +201,6 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(male.isSelected()) {
 					female.setSelected(false);
-					ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Gender");
-					factNode.addFinding(0);
 				}
 			}
 		});
@@ -223,8 +210,6 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(female.isSelected()) {
 					male.setSelected(false);
-					ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Gender");
-					factNode.addFinding(1);
 			}
 				
 			}
@@ -236,8 +221,6 @@ public class MainFrame extends JFrame {
 				if(c1.isSelected()) {
 					c2.setSelected(false);
 					c3.setSelected(false);
-					ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("PClass");
-					factNode.addFinding(0);
 				}
 			}
 		});
@@ -247,8 +230,6 @@ public class MainFrame extends JFrame {
 				if(c2.isSelected()) {
 					c1.setSelected(false);
 					c3.setSelected(false);
-					ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("PClass");
-					factNode.addFinding(1);
 				}
 			}
 		});		
@@ -259,8 +240,6 @@ public class MainFrame extends JFrame {
 				if(c3.isSelected()) {
 					c2.setSelected(false);
 					c1.setSelected(false);
-					ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("PClass");
-					factNode.addFinding(2);
 				}
 			}
 		});	
@@ -268,11 +247,7 @@ public class MainFrame extends JFrame {
 		jb.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-
-				algorithm.run();			
-				nodeList = net.getNodes();
 				
-				Boolean nonExist=false;
 				resultJava.setText("");
 				resultUnb.setText("");
 				ArrayList<String> proba=new ArrayList<String>();
@@ -283,18 +258,16 @@ public class MainFrame extends JFrame {
 					proba.add("2");
 				else if(c3.isSelected())
 					proba.add("3");
-				else {
-					nonExist=true;
+				else 
 					proba.add("");
-				}
+				
 				if(male.isSelected())
 					proba.add("male"); // gender
 				else if(female.isSelected())
 					proba.add("female");
-				else{
-					nonExist=true;
+				else
 					proba.add("");
-				}
+				
 				
 				proba.add(ageText.getText()); //age
 				proba.add(sibpText.getText()); //sibsp
@@ -307,92 +280,31 @@ public class MainFrame extends JFrame {
 					proba.add("C");
 				else if(emberkedQ.isSelected())
 					proba.add("Q");
-				else {
-					nonExist=true;
+				else 
 					proba.add("");
-				
-				for(int i=0;i<proba.size();i++)
+
+				boolean nonExist=true;
+				for(int i=0;i<proba.size();i++) {
 					if(!proba.get(i).equals("")) {
-						Bayes bayes=new Bayes();
-						resultJava.setText("Result calculated using Bayes algorithm: "+bayes.BayesianTheoremCalculate(proba));				
+						nonExist=false;				
 						break;
 					}
 				}
-				if(!ageText.getText().isEmpty()) {
-					if(Integer.parseInt(ageText.getText())<18) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Age");
-						factNode.addFinding(0);
-					}else if(Integer.parseInt(ageText.getText())<55) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Age");
-						factNode.addFinding(1);
-					}else {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Age");
-						factNode.addFinding(2);
-					}				
+				if(!nonExist) {
+					try {
+						if(bayes.BayesianTheoremCalculate(proba).equals("1"))
+							resultJava.setText("Result calculated using Bayesian theorem: You would survive!");
+						else
+							resultJava.setText("Result calculated using Bayesian theorem: You would not survive!");
+						
+						if(bayes.BayesianNetworkCalculate(proba).equals("1"))
+							resultUnb.setText("Result calculated using Bayesian network: You would survive!");
+						else
+							resultUnb.setText("Result calculated using Bayesian network: You would not survive!");
+					} catch (Exception e1) {
+							e1.printStackTrace();
+					}
 				}
-				
-				if(!sibpText.getText().isEmpty()) {
-					if(Integer.parseInt(sibpText.getText())==0) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Sibp");
-						factNode.addFinding(0);
-					}else if(Integer.parseInt(sibpText.getText())<=3) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Sibp");
-						factNode.addFinding(1);
-					}else if(Integer.parseInt(sibpText.getText())<=6) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Sibp");
-						factNode.addFinding(2);
-					}else {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Sibp");
-						factNode.addFinding(3);
-					}				
-				}
-				
-				
-				if(!parchText.getText().isEmpty()) {
-					if(Integer.parseInt(parchText.getText())==0) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Parch");
-						factNode.addFinding(0);
-					}else if(Integer.parseInt(parchText.getText())<=3) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Parch");
-						factNode.addFinding(1);
-					}else {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Parch");
-						factNode.addFinding(2);
-					}				
-				}
-				
-
-				if(!fareText.getText().isEmpty()) {
-					if(Integer.parseInt(fareText.getText())<51.23) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Fare");
-						factNode.addFinding(0);
-					}else if(Integer.parseInt(fareText.getText())<153.70) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Fare");
-						factNode.addFinding(1);
-					}else if(Integer.parseInt(fareText.getText())<307.40) {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Fare");
-						factNode.addFinding(1);
-					}else {
-						ProbabilisticNode factNode = (ProbabilisticNode)net.getNode("Fare");
-						factNode.addFinding(2);
-					}				
-				}
-				
-				try {
-					net.updateEvidences();
-		        	for (Node node : nodeList) {
-		        		if(node.getDescription().equals("C5")) {
-			        		if(((ProbabilisticNode)node).getMarginalAt(0) > ((ProbabilisticNode)node).getMarginalAt(1))
-								resultUnb.setText("Result calculated using Bayes algorithm: You would survive!");
-							else
-								resultUnb.setText("Result calculated using Bayes algorithm: You would not survive!");
-		        		}
-		        	}
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
 			}
 		});
 		
@@ -411,7 +323,7 @@ public class MainFrame extends JFrame {
 				
 			}
 			public void windowClosing(WindowEvent e) {
-				//UKOLIKO ZELIMO DA SACUVAMO KADA IZADJE
+				
 			}
 			
 			public void windowClosed(WindowEvent e) {
