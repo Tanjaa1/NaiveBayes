@@ -32,9 +32,6 @@ public class Bayes {
 						d.add(str1[i]);
 						t.add(d);
 					data = t;
-//				
-//					if(d.size()<9)
-//						d.add("");
 				}else firstLine=true;
 			}
 			bf.close();
@@ -91,7 +88,20 @@ public class Bayes {
 		return result;
 	}
 	
-	public String Calculate(ArrayList<String> values){
+	public String BayesianTheoremCalculate(ArrayList<String> values){
+		Double yes=0.0,no=0.0;
+		
+		//P(A|BC)= P(BC|A)*P(A)/P(BC)
+		no=classEP("0", values) / denominator(values);
+		yes=classEP("1", values) / denominator(values);
+		
+		if(yes>no)
+			return "You would survive!";
+		else
+			return "You would not survive!";
+	}
+	
+	public String BayesianNetworkCalculate(ArrayList<String> values){
 		Double yes=0.0,no=0.0;
 		
 		//P(A|BC)= P(BC|A)*P(A)/P(BC)

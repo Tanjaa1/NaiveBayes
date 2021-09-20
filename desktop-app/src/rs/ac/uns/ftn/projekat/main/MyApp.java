@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import rs.ac.uns.ftn.projekat.backend.Test;
 import rs.ac.uns.ftn.projekat.front.MainFrame;
 import unbbayes.io.exception.LoadException;
 
@@ -88,8 +89,8 @@ public class MyApp{
 	}
 	
 
-	public static void main(String[] args)throws LoadException, IOException {
-		
+	public static void main(String[] args)throws Exception {
+		Test t=new Test();
 		MainFrame mf=MainFrame.getInstance();
 		mf.setVisible(true);
 		
