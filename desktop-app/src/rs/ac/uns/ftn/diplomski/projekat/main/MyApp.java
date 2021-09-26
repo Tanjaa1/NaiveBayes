@@ -1,16 +1,13 @@
-package rs.ac.uns.ftn.projekat.main;
+package rs.ac.uns.ftn.diplomski.projekat.main;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import rs.ac.uns.ftn.projekat.backend.Test;
-import rs.ac.uns.ftn.projekat.front.MainFrame;
-import unbbayes.io.exception.LoadException;
+import rs.ac.uns.ftn.diplomski.projekat.frontend.MainFrame;
 
 public class MyApp{ 
 	static String filePath = "train.csv";

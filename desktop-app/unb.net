@@ -46,7 +46,7 @@ node Fare
 {
      label = "C7";
      position = (597 231);
-     states = ("low" "midium" "high" "very high");
+     states = ("low" "medium" "high" "very high");
 }
 
 node Survived

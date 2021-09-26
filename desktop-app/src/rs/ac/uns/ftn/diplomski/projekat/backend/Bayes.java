@@ -1,18 +1,13 @@
-package rs.ac.uns.ftn.projekat.backend;
+package rs.ac.uns.ftn.diplomski.projekat.backend;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-
 import unbbayes.io.BaseIO;
 import unbbayes.io.NetIO;
-import unbbayes.io.exception.LoadException;
-import unbbayes.prs.Node;
 import unbbayes.prs.bn.JunctionTreeAlgorithm;
 import unbbayes.prs.bn.ProbabilisticNetwork;
 import unbbayes.prs.bn.ProbabilisticNode;
@@ -103,7 +98,7 @@ public class Bayes {
 		//P(BC)=P(B)*P(C)
 		for (int j = 1; j < count.size(); j++) {
 			if(count.get(j)!=0)
-			result=result*count.get(j)/ (train.size()*1.0);
+				result=result*count.get(j)/ (train.size()*1.0);
 		}
 		
 		return result;
@@ -125,7 +120,7 @@ public class Bayes {
 			}
 		}
 		//P(BC|A)*P(A)=P(A)*P(B|A)*P(C|A)=P(A)*P(BA)/P(A)*P(CA)/P(A)
-		result=countIsClass/ (test.size()*1.0);//P(A)
+		result=countIsClass/ (train.size()*1.0);//P(A)
 
 		for (int j = 1; j < count.size(); j++) {//P(?A)/P(A)
 			if(count.get(j)!=0)

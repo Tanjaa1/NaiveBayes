@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.projekat.front;
+package rs.ac.uns.ftn.diplomski.projekat.frontend;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,30 +11,16 @@ import java.awt.event.ActionListener;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
-
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-import net.sourceforge.jFuzzyLogic.demo.dynamics.Test;
-import unbbayes.prs.Node;
-import unbbayes.prs.bn.JunctionTreeAlgorithm;
-import unbbayes.prs.bn.ProbabilisticNetwork;
-import unbbayes.prs.bn.ProbabilisticNode;
-import unbbayes.util.extension.bn.inference.IInferenceAlgorithm;
-import unbbayes.io.BaseIO;
-import unbbayes.io.NetIO;
-import unbbayes.io.exception.LoadException;
-
-import rs.ac.uns.ftn.projekat.backend.Bayes;
+import rs.ac.uns.ftn.diplomski.projekat.backend.Bayes;
 
 public class MainFrame extends JFrame {
 	
